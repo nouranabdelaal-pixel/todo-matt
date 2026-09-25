@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { Task } from "@/types/task";
 
 type Props = {
@@ -37,9 +37,11 @@ export function TaskItem({ task, onToggle, onDelete, onEdit }: Props) {
 
   return (
     <li className="flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-100 last:border-b-0 group">
-      {/* Checkbox */}
+      {/* Checkbox — stop propagation on double-click so two rapid clicks
+          don't toggle twice before the browser fires the dblclick event */}
       <button
         onClick={() => onToggle(task.id)}
+        onDoubleClick={(e: MouseEvent) => e.stopPropagation()}
         aria-label={task.completed ? "Mark incomplete" : "Mark complete"}
         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
           task.completed
@@ -60,7 +62,8 @@ export function TaskItem({ task, onToggle, onDelete, onEdit }: Props) {
         )}
       </button>
 
-      {/* Title / edit input */}
+      {/* Title / edit input — double-click opens edit; stopPropagation
+          ensures the event never reaches the toggle button */}
       {editing ? (
         <input
           ref={inputRef}
@@ -73,7 +76,8 @@ export function TaskItem({ task, onToggle, onDelete, onEdit }: Props) {
         />
       ) : (
         <span
-          onDoubleClick={() => {
+          onDoubleClick={(e: MouseEvent) => {
+            e.stopPropagation();
             setDraft(task.title);
             setEditing(true);
           }}

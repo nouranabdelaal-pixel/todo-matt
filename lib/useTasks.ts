@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Task } from "@/types/task";
 
 const STORAGE_KEY = "todo-matt-tasks";
@@ -21,14 +21,17 @@ function saveTasks(tasks: Task[]): void {
 
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const loaded = useRef(false);
 
   // Hydrate from localStorage after mount to avoid SSR mismatch
   useEffect(() => {
     setTasks(loadTasks());
+    loaded.current = true;
   }, []);
 
-  // Persist on every change
+  // Persist on every change, but only after the initial load has completed
   useEffect(() => {
+    if (!loaded.current) return;
     saveTasks(tasks);
   }, [tasks]);
 
