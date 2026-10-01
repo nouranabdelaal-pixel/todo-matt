@@ -84,4 +84,7 @@ next-env.d.ts
 
 # AST tool output
 graphify-out/
-.understand-anything/
+.ua/
+
+# git attruibutes
+.gitattributes
