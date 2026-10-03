@@ -8,3 +8,4 @@ public/
 postcss.config.mjs 
 next.config.ts 
 eslint.config.mjs
+blast-radius.ps1
